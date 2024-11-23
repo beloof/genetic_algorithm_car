@@ -189,7 +189,7 @@ class Track:
 
         display.fill((255, 255, 255)) 
 
-        self.display_message(display, f'you can load from premade files: you have {len(os.listdir('tracks/'))} availabe', color = 'black', x = 10, y = 15)
+        self.display_message(display, f'you can load from premade files: you have {len(os.listdir("tracks/"))} availabe', color = 'black', x = 10, y = 15)
 
         start_sim = Button('make track', 
                            self.button_width, self.button_height, 
