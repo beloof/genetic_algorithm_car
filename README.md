@@ -64,11 +64,19 @@ genetic_algorithm_car/
 
 ### 3. **Features**
 - Save and load generations to continue training.
+- Create, save and load tracks
 - Observe performance metrics like fitness scores and generations.
 
 ---
 
-## Toba Added
+## Training advice
+
+- Avoid using wide paths, the agents will go in circles and their fittness will explode.
+- Making the agents start near a corner will make the simulation go through the initial generations faster 
+
+---
+
+## To be Added
 
 Planned future enhancements:
 
