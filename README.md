@@ -94,6 +94,9 @@ Planned future enhancements:
 
 5. **Diversity in Reproduction**:
    - Adjust reproduction logic to discourage identical individuals and maintain population diversity.
+  
+6. **Bug fixes and Code Clean up**:
+   - My code still lacks comments and docstrings, there also is some junk code to be removed/updated.
 
 ---
 
