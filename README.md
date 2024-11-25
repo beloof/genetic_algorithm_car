@@ -105,3 +105,7 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ## Acknowledgements
 Special thanks to contributors and open-source libraries that made this project possible.
 
+Thanks [clear code](https://www.youtube.com/watch?v=8SzTzvrWaAA&t=118s) for the button.
+
+Thanks to the multiple github users, that taught me how to make a genetic algorithm
+
