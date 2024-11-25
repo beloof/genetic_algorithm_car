@@ -2,12 +2,14 @@
 import os
 import shutil
 import random
-from math import sin, cos, radians, sqrt
+from math import sin, cos, radians, sqrt, log
 import pickle
+import copy
 
 # Third-Party Imports
 import matplotlib.pyplot as plt
 import pygame
+import numpy as np
 
 # Local Imports
 from core.brain import Brain
@@ -42,10 +44,13 @@ class Car:
         self.x = track.start[0]
         self.y = track.start[1]
 
+        self.coord = None
         self.angle = 0
 
         self.score = 0.0
-        self.crashed = True
+        self.fitness = 0
+        self.crashed = False
+        return self
         
     def translation(self, coord):
         return [coord[0] + self.x, coord[1] + self.y]
@@ -140,7 +145,7 @@ class Car:
 
                     if temp_distance != float('inf'):
                         self.crashed = True
-                        self.fitness = self.score
+                        self.fitness = max(1,log(self.score + 2))
 
             for j in range(-1,3):
                 for i in range(-1,len(second_border)-1):
@@ -148,11 +153,11 @@ class Car:
 
                     if temp_distance != float('inf'):
                         self.crashed = True
-                        self.fitness = self.score
+                        self.fitness = max(0,log(self.score + 2))
 
             if self.score > 200:
                 self.crashed = True
-                self.fitness = self.score
+                self.fitness = max(0,log(self.score + 2))
 
             self.think()
             
@@ -210,13 +215,13 @@ class Population:
         self.probabilities = []
         self.crashed = []
         self.track = None
-        self.seed=None
+        self.seed=42
 
     def create_population(self, track, count, seed = None):
 
         self.seed = seed
         self.track = track
-        color = self.get_dim_colors(count)
+        color = self.get_dim_colors(count, self.seed)
         
         self.probabilities = [0]*count
         
@@ -230,7 +235,7 @@ class Population:
         for car in self.population:
             car.move(track)
 
-    def evolve(self, track, mutation_rate, mutation_coef):
+    def evolve(self, track, mutation_rate, mutation_coef, crossover_rate, elitism):
         for car in self.population:
             if not car.crashed:
                 return
@@ -239,42 +244,45 @@ class Population:
         for i in range(len(self.population)):
             plt.scatter(i,self.population[i].fitness)
         
-        return self.reproduction(track, mutation_rate, mutation_coef)
+        return self.reproduction(track, mutation_rate, mutation_coef, crossover_rate, elitism)
+    
+
+    def reproduction(self, track, mutation_rate, mutation_coef, crossover_rate, elitism):
         
-    def reproduction(self, track, mutation_rate, mutation_coef):
         self.normalize_fitness()
 
-        best_car, second_best_car = None, None
-        highest_fitness, second_highest_fitness = 0, 0
+        elitism_count = max(1,int(elitism*len(self.population)))
         
-        for car in self.population:
-            if car.fitness > highest_fitness:
-                second_highest_fitness = highest_fitness
-                second_best_car = best_car
-                highest_fitness = car.fitness
-                best_car = car
-            elif car.fitness > second_highest_fitness:
-                second_highest_fitness = car.fitness
-                second_best_car = car
+        best_cars = list(sorted(self.population, key= lambda x : x.fitness, reverse= True))
+        best_score = best_cars[0].score
 
+        
+        best_cars_saved = list()
+
+        for i in range(elitism_count):
+            car = Car(track, best_cars[i].color)
+            car.brain.biases = best_cars[i].brain.biases.copy()
+            car.brain.weights = best_cars[i].brain.weights.copy()
+            best_cars_saved.append(car)
+
+        
         new_generation = Population()
-        best_offspring_a = Car(track, best_car.color)
-        best_offspring_b = Car(track, second_best_car.color)
-        best_offspring_a.brain = best_car.brain
-        best_offspring_b.brain = second_best_car.brain
-
-        new_generation.population.extend([best_offspring_a, best_offspring_b])
-
-        for i in range(2, len(self.population), 2):
+        new_generation.population.extend(best_cars_saved)
+        
+        
+        i = elitism_count
+        while len(new_generation.population) < len(self.population)-1:
         
             parent_index_a = self.pick_one()
             parent_index_b = self.pick_one()
 
-            child_a = Car(track, self.population[i % len(self.population)].color)
-            child_b = Car(track, self.population[(i + 1) % len(self.population)].color)
+            child_a = Car(track, self.population[i].color)
+            child_b = Car(track, self.population[i+1].color)
 
             child_a.brain, child_b.brain = self.population[parent_index_a].brain.crossover(
-                self.population[parent_index_b].brain
+                self.population[parent_index_b].brain,
+                crossover_rate,
+                self.seed
             )
             
             child_a.brain.mutation(mutation_rate, mutation_coef, self.seed)
@@ -282,11 +290,23 @@ class Population:
 
             new_generation.population.extend([child_a, child_b])
 
-        self.population = new_generation.population
+            i += 2
+
+        if len(new_generation.population) != len(self.population):
+            i = self.pick_one()
+            child = Car(track, self.population[-1].color)
+            child.brain.weights = copy.deepcopy(self.population[i].brain.weights)
+            child.brain.biases = copy.deepcopy(self.population[i].brain.biases)
+            child.brain.mutation(mutation_rate, mutation_coef, self.seed)
+            new_generation.population.extend([child])
+
+        self.population = list(new_generation.population)
         self.probabilities = [0]*len(self.population)
 
-        return highest_fitness
+
+        return best_score
     
+
     def normalize_fitness(self):
         summation = 0
 
@@ -325,7 +345,7 @@ class Population:
             if prob < 0:
                 return i
         
-        return 0
+        return -1
 
     def load_generation(self):
 
@@ -431,7 +451,12 @@ class Population:
         self.population[i].save_best_brain()
     
     @staticmethod        
-    def get_dim_colors(n):
+    def get_dim_colors(n, seed = None):
+                
+        if seed is not None:
+            np.random.seed(seed)
+            random.seed(seed)
+
         return [
             (
                 random.randint(0, 200),

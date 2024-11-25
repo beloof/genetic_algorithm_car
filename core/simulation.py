@@ -10,7 +10,7 @@ from core.track import Track
 from core.ui import *
 
 
-def simulation(mutation_rate, mutation_coef, width, height, display, clock, big_font, small_font, count):
+def simulation(mutation_rate, mutation_coef, crossover_rate, elitism, width, height, display, clock, big_font, small_font, count):
 
     best_score = 0
     generation = 0
@@ -34,6 +34,7 @@ def simulation(mutation_rate, mutation_coef, width, height, display, clock, big_
         "save data will save current generation at 'data/Trained' regardless\n"
         "they will both save the best car if its score is better than the currently saved one\n"
         "load data and load best will load the saved data it there is any\n"
+        "note that scores are capped at 200"
     )
 
 
@@ -96,8 +97,11 @@ def simulation(mutation_rate, mutation_coef, width, height, display, clock, big_
         
         
         
-        temp = population.evolve(track, mutation_rate, mutation_coef)
+        temp = population.evolve(track, mutation_rate, mutation_coef, crossover_rate, elitism)
+
         if temp is not None :
+            if(temp < best_score):
+                print('problem')
             best_score = temp
             generation += 1
         

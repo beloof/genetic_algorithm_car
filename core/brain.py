@@ -1,5 +1,6 @@
 # Standard Library Imports
 import random
+import copy
 
 # Third-Party Imports
 import numpy as np
@@ -36,7 +37,26 @@ class Brain:
         else:
             return -1
 
-    def crossover(self, other):
+    def crossover(self, other, crossover_rate, seed = None):
+
+                
+        if seed is not None:
+            np.random.seed(seed)
+            random.seed(seed)
+
+
+        if random.uniform(0,1) > crossover_rate:
+            newBrain1 = Brain(self.size)
+            newBrain2 = Brain(self.size)
+
+            newBrain1.biases = copy.deepcopy(self.biases)
+            newBrain2.biases = copy.deepcopy(other.biases)
+
+            newBrain1.weights = copy.deepcopy(self.weights)
+            newBrain2.weights = copy.deepcopy(other.weights)
+
+            return newBrain1, newBrain2
+
         newBrain1 = Brain(self.size)
         newBrain2 = Brain(self.size)
         
@@ -68,15 +88,17 @@ class Brain:
             np.random.seed(seed)
             random.seed(seed)
     
-        if random.random() <= mutation_rate / 100.0:
+        if random.random() <= mutation_rate:
 
             for i in range(len(self.weights)):
-                mutation_mask = np.random.rand(*self.weights[i].shape) < mutation_rate / 100.0
+                mutation_mask = np.random.rand(*self.weights[i].shape) < mutation_rate
                 self.weights[i] += mutation_mask * np.random.randn(*self.weights[i].shape) * mutation_coef
 
             for i in range(len(self.biases)):
                 mutation_mask = np.random.rand(*self.biases[i].shape) < mutation_rate / 100.0
                 self.biases[i] += mutation_mask * np.random.randn(*self.biases[i].shape) * mutation_coef
+
+
 
 def ReLU(data):
     data[data < 0] = 0

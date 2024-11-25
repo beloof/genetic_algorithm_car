@@ -4,9 +4,15 @@ import pygame
 # Local Imports
 from core.simulation import *
 
-mutation_rate = 50
+
+
+
+
+elitism = 0.1
+crossover_rate = 0.95
+mutation_rate = 0.5
 mutation_coef = 1
-count = 9
+count = 15
 
 width = 1100
 height = 700
@@ -21,4 +27,4 @@ clock = pygame.time.Clock()
 
 pygame.display.set_caption('car ai')
 
-simulation(mutation_rate, mutation_coef, width, height, display, clock, big_font, small_font, count)
+simulation(mutation_rate, mutation_coef, crossover_rate, elitism, width, height, display, clock, big_font, small_font, count)
