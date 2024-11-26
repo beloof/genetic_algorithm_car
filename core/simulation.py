@@ -86,7 +86,7 @@ def simulation(mutation_rate, mutation_coef, crossover_rate, elitism, width, hei
         
         if restart.used:
             restart.used = False
-            simulation(mutation_rate, mutation_coef, width, height, display, clock, big_font, small_font, count)
+            simulation(mutation_rate, mutation_coef, crossover_rate, elitism, width, height, display, clock, big_font, small_font, count)
             feedback = 'restarted'
         
         if leave.used:
