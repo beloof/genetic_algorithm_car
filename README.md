@@ -4,6 +4,25 @@ This project simulates cars learning to drive on custom tracks using a genetic a
 
 ---
 
+## Table of Contents
+
+1. [How the Algorithm Works](#how-the-algorithm-works)
+   - [Initialization](#1-initialization)
+   - [Simulation](#2-simulation)
+   - [Evolution](#3-evolution)
+   - [Next Generation](#4-next-generation)
+2. [Project Structure](#project-structure)
+3. [How to Use](#how-to-use)
+   - [Setup](#1-setup)
+   - [Run the Simulation](#2-run-the-simulation)
+   - [Features](#3-features)
+4. [Training Advice](#training-advice)
+5. [To be Added](#to-be-added)
+6. [License](#license)
+7. [Acknowledgements](#acknowledgements)
+
+---
+
 ## How the Algorithm Works
 
 ### 1. **Initialization**
@@ -64,15 +83,15 @@ genetic_algorithm_car/
 
 ### 3. **Features**
 - Save and load generations to continue training.
-- Create, save and load tracks
+- Create, save and load tracks.
 - Observe performance metrics like fitness scores and generations.
 
 ---
 
-## Training advice
+## Training Advice
 
-- Avoid using wide paths, the agents will go in circles and their fittness will explode.
-- Making the agents start near a corner will make the simulation go through the initial generations faster 
+- Avoid using wide paths; the agents will go in circles and their fitness will explode.
+- Starting agents near a corner can speed up progress during the initial generations.
 
 ---
 
@@ -95,8 +114,8 @@ Planned future enhancements:
 5. **Diversity in Reproduction**:
    - Adjust reproduction logic to discourage identical individuals and maintain population diversity.
   
-6. **Bug fixes and Code Clean up**:
-   - My code still lacks comments and docstrings, there also is some junk code to be removed/updated.
+6. **Bug Fixes and Code Cleanup**:
+   - Add comments and docstrings, and remove or update junk code.
 
 ---
 
@@ -108,7 +127,7 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ## Acknowledgements
 Special thanks to contributors and open-source libraries that made this project possible.
 
-Thanks [clear code](https://www.youtube.com/watch?v=8SzTzvrWaAA&t=118s) for the button.
+Thanks [Clear Code](https://www.youtube.com/watch?v=8SzTzvrWaAA&t=118s) for the button.
 
-Thanks to the multiple github users, that taught me how to make a genetic algorithm
+Thanks to the multiple GitHub users who shared insights into genetic algorithms.
 
