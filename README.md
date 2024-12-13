@@ -129,5 +129,5 @@ Special thanks to contributors and open-source libraries that made this project 
 
 Thanks [Clear Code](https://www.youtube.com/watch?v=8SzTzvrWaAA&t=118s) for the button.
 
-Thanks to the multiple GitHub users who shared insights into genetic algorithms.
+Thanks to the multiple GitHub users, [jatinmandav](https://github.com/jatinmandav) specifically, who shared insights into genetic algorithms.
 
