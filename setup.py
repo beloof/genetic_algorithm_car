@@ -4,7 +4,6 @@ setup(
     name="genetic_algorithm_car",  # Name of the package
     version="1.0.0",  # Initial version
     author="Lassioued Badis",
-    author_email="hemmmnj@gmail.com",
     description="A simulation of cars learning to drive using genetic algorithms.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
