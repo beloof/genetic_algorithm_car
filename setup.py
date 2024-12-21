@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="genetic_algorithm_car",  # Name of the package
-    version="1.0.0",  # Initial version
+    name="genetic_algorithm_car",
+    version="1.0.0",
     author="Lassioued Badis",
     description="A simulation of cars learning to drive using genetic algorithms.",
     long_description=open("README.md").read(),
